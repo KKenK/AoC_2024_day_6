@@ -10,15 +10,19 @@ parsed_input_with_border = add_char_border.add_char_border(parsed_input, "O")
 
 lab = grid.Grid(parsed_input_with_border)
 
-lab_guard = guard.Guard("^", find_guard.return_guard_coordinates(parsed_input_with_border))
+lab_guard = guard.Guard(floor_plan = lab, orientation = "^", current_location_coordinates = find_guard.return_guard_coordinates(parsed_input_with_border))
 
-while lab_guard.has_exited(parsed_input_with_border) == False:
+while lab_guard.has_exited() == False:
 
     lab.mark_grid_position(x = lab_guard.current_location_x_coordinate,
                             y = lab_guard.current_location_y_coordinate,
                             mark_char = "X")
+    
+    if lab_guard.look_ahead_at_the_next_adjacent_space() == "#":
+            
+        lab_guard.turn_90_degrees_right()
 
-    lab_guard.take_one_step_forward(parsed_input_with_border)
+    lab_guard.take_one_step_forward()
 
 distinct_positions_visited_count = 0 
 
