@@ -18,7 +18,7 @@ while lab_guard.has_exited() == False:
                             y = lab_guard.current_location_y_coordinate,
                             mark_char = "X")
     
-    if lab_guard.look_ahead_at_the_next_adjacent_space() == "#":
+    while lab_guard.look_ahead_at_the_next_adjacent_space() == "#":
             
         lab_guard.turn_90_degrees_right()
 
@@ -30,7 +30,19 @@ for row in lab.grid:
 
     distinct_positions_visited_count += [x.char for x in row].count("X")
 
+parsed_correct_answer = input_parser.InputParser(r"C:\Users\kylek\Documents\code\Advent_of_code\2024\Day_6\test_right_answer.txt").parsed_input
 
+parsed_correct_answer_with_border = add_char_border.add_char_border(parsed_correct_answer, "O")
+
+solution = []
+
+for row in lab.grid:
+
+    solution.append(str("".join([x.char for x in row])))
+
+
+if solution == parsed_correct_answer_with_border:
+    print("Equal!!!")
 with open((r"C:\Users\kylek\Documents\code\Advent_of_code\2024\Day_6\marked_grid.txt"),"w") as f:
     for row in lab.grid:
 
