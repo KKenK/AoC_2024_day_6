@@ -55,9 +55,9 @@ def find_loop_causing_obstruction_count(floor_plan, positions_visited_set, guard
         simulation_log = RouteLogger()
 
         while guard_simulation.has_exited() == False:
-            
+           
    
-            if guard_simulation.look_ahead_at_the_next_adjacent_space() == "#":
+            while guard_simulation.look_ahead_at_the_next_adjacent_space() == "#":
                     
                 guard_simulation.turn_90_degrees_right()
             
@@ -109,7 +109,6 @@ floor_plan = copy.deepcopy(lab)
 #positions_visited_set = make_set_of_possible_points_to_insert_object(positions_visited_set)
 
 positions_visited_set = []
-
 for row in lab.grid:
     for point in row:
         if not point.char == "X":
