@@ -8,11 +8,11 @@ import copy
 class RouteLogger():
 
     def __init__(self):
-        self.log_entries = []
+        self.log_entries = set()
     
     def add_entry(self, x, y , guard_orientation):
 
-        self.log_entries.append((x, y ,guard_orientation))
+        self.log_entries.add((x, y ,guard_orientation))
 
     def check_if_entry_in_log(self, x, y, guard_orientation):
 
@@ -56,7 +56,7 @@ def find_loop_causing_obstruction_count(floor_plan, positions_visited_set, guard
 
         while guard_simulation.has_exited() == False:
            
-   
+
             while guard_simulation.look_ahead_at_the_next_adjacent_space() == "#":
                     
                 guard_simulation.turn_90_degrees_right()
@@ -93,7 +93,7 @@ while lab_guard.has_exited() == False:
                             y = lab_guard.current_location_y_coordinate,
                             mark_char = "X")
     
-    if lab_guard.look_ahead_at_the_next_adjacent_space() == "#":
+    while lab_guard.look_ahead_at_the_next_adjacent_space() == "#":
             
         lab_guard.turn_90_degrees_right()
 
