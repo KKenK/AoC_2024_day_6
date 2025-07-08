@@ -31,14 +31,14 @@ class Floor_Plan_Simulation():
         self.new_obstruction_coordinates = new_obstruction_coordinates
 
     def __enter__(self):
-        floor_plan.mark_grid_position(x = self.new_obstruction_coordinates[0],
+        self.floor_plan.mark_grid_position(x = self.new_obstruction_coordinates[0],
                         y = self.new_obstruction_coordinates[1],
                         mark_char = "#")
         
         return self.floor_plan
     
     def __exit__(self, type, value, traceback):
-        floor_plan.mark_grid_position(x = self.new_obstruction_coordinates[0],
+        self.floor_plan.mark_grid_position(x = self.new_obstruction_coordinates[0],
                         y = self.new_obstruction_coordinates[1],
                         mark_char = ".")
         
@@ -63,16 +63,15 @@ def find_loop_causing_obstruction_count(floor_plan, positions_visited_set, guard
 
     for i in range(len(positions_visited_set)):
         
-        with Floor_Plan_Simulation(floor_plan, (positions_visited_set[i][0],positions_visited_set[i][1])) as floor_plan_simulation:
+        with Floor_Plan_Simulation(floor_plan, positions_visited_set[i]) as floor_plan_simulation:
            
-
+            
             guard_simulation = guard.Guard(floor_plan = floor_plan_simulation, orientation = "^", 
                                         current_location_coordinates = guard_starting_coordinates)
 
             simulation_log = RouteLogger()
 
-            while guard_simulation.has_exited() == False:
-            
+            while guard_simulation.has_exited() == False:          
 
                 while guard_simulation.look_ahead_at_the_next_adjacent_space() == "#":
                         
@@ -92,7 +91,7 @@ def find_loop_causing_obstruction_count(floor_plan, positions_visited_set, guard
 
     return viable_loop_position_count
 
-parsed_input = input_parser.InputParser(cwd + r"\test.txt").parsed_input
+parsed_input = input_parser.InputParser(cwd + r"\input.txt").parsed_input
 
 parsed_input_with_border = add_char_border.add_char_border(parsed_input, "O")
 
