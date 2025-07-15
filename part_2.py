@@ -4,7 +4,7 @@ from classes import grid
 from classes import guard
 from modules import find_guard
 from modules import add_char_border
-import copy
+#mport copy
 
 cwd = os.getcwd()
 
@@ -62,34 +62,39 @@ def find_loop_causing_obstruction_count(floor_plan, positions_visited_set, guard
     viable_loop_position_count = 0
 
     for i in range(len(positions_visited_set)):
-        
+
         with Floor_Plan_Simulation(floor_plan, positions_visited_set[i]) as floor_plan_simulation:
-           
             
             guard_simulation = guard.Guard(floor_plan = floor_plan_simulation, orientation = "^", 
                                         current_location_coordinates = guard_starting_coordinates)
 
             simulation_log = RouteLogger()
 
-            while guard_simulation.has_exited() == False:          
+            if does_new_obstruction_cause_a_loop(guard_simulation, simulation_log):
 
-                while guard_simulation.look_ahead_at_the_next_adjacent_space() == "#":
-                        
-                    guard_simulation.turn_90_degrees_right()
-                
-                if simulation_log.check_if_entry_in_log(x = guard_simulation.current_location_x_coordinate, y = guard_simulation.current_location_y_coordinate,
-                                    guard_orientation = guard_simulation.orientation):
-                    
-                    viable_loop_position_count += 1   
-
-                    break
-
-                simulation_log.add_entry(x = guard_simulation.current_location_x_coordinate, y = guard_simulation.current_location_y_coordinate,
-                                    guard_orientation = guard_simulation.orientation)
-                
-                guard_simulation.take_one_step_forward()
+                viable_loop_position_count += 1  
 
     return viable_loop_position_count
+
+def does_new_obstruction_cause_a_loop(guard_simulation, simulation_log):
+
+    while guard_simulation.has_exited() == False:          
+
+        while guard_simulation.look_ahead_at_the_next_adjacent_space() == "#":
+                
+            guard_simulation.turn_90_degrees_right()
+            
+            if simulation_log.check_if_entry_in_log(x = guard_simulation.current_location_x_coordinate, y = guard_simulation.current_location_y_coordinate,
+                            guard_orientation = guard_simulation.orientation):
+                
+                return True
+
+            simulation_log.add_entry(x = guard_simulation.current_location_x_coordinate, y = guard_simulation.current_location_y_coordinate,
+                                guard_orientation = guard_simulation.orientation)       
+
+        guard_simulation.take_one_step_forward()
+
+    return False
 
 parsed_input = input_parser.InputParser(cwd + r"\input.txt").parsed_input
 
@@ -118,12 +123,8 @@ while lab_guard.has_exited() == False:
     
     lab_guard.take_one_step_forward()
 
-floor_plan = copy.deepcopy(lab)
-
-#positions_visited_set = copy.copy(guard_log.log_entries)
-
-#positions_visited_set = make_set_of_possible_points_to_insert_object(positions_visited_set)
-
+positions_visited_set = make_set_of_possible_points_to_insert_object(guard_log.log_entries)
+"""
 positions_visited_set = []
 for row in lab.grid:
     for point in row:
@@ -138,8 +139,9 @@ while i < len(positions_visited_set):
         continue
     positions_visited_set.pop(i)
 
+"""
 
-floor_plan.mark_grid_position(x = guard_starting_coordinates[0], y = guard_starting_coordinates[1], mark_char = ".")
+#floor_plan.mark_grid_position(x = guard_starting_coordinates[0], y = guard_starting_coordinates[1], mark_char = ".")
 
 with open((cwd + r"\marked_grid.txt"),"w") as f:
     
